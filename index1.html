@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadi Pacar Aku?</title>
+  <link rel="stylesheet" href="style.css"> <!-- Menambahkan referensi ke file CSS eksternal -->
+</head>
+<body>
+  <div class="content">
+    <h1 class="animated-text">Kamu Mau Jadi Pacar Aku?</h1>
+    <div class="image-container">
+      <img id="gambar" src="img/bucin1.jpg" alt="Bucin"> <!-- URL gambar bucin di folder img -->
+    </div>
+
+    <div class="tombol-container">
+      <button class="tombol" onclick="terima()">Terima</button>
+      <button id="tolak" class="tombol" onclick="tolak()">Tolak</button>
+      <button class="tombol" onclick="confirmBack()">Kembali</button> <!-- Tombol Kembali -->
+    </div>
+
+    <div id="emoji-container"></div> <!-- Kontainer untuk emoji sedih -->
+  </div>
+
+  <!-- Pop-up konfirmasi -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <p>Kamu yakin ingin kembali?</p>
+      <button onclick="goBack()">Ya</button>
+      <button onclick="closePopup()">Tidak</button>
+    </div>
+  </div>
+
+  <script>
+    function terima() {
+      window.location.href = 'index2.html'; // Arahkan ke halaman "index2.html" jika diterima
+    }
+
+    function tolak() {
+      const button = document.getElementById('tolak');
+      const container = document.querySelector('.content');
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      
+      // Generate random positions within a smaller range inside the container
+      const rangeX = containerRect.width / 3;
+      const rangeY = containerRect.height / 3;
+      const randomX = Math.random() * rangeX - rangeX / 2 + (buttonRect.left - containerRect.left);
+      const randomY = Math.random() * rangeY - rangeY / 2 + (buttonRect.top - containerRect.top);
+      
+      // Position the button within the container
+      button.style.position = 'absolute';
+      button.style.left = Math.max(0, Math.min(containerRect.width - buttonRect.width, randomX)) + 'px';
+      button.style.top = Math.max(0, Math.min(containerRect.height - buttonRect.height, randomY)) + 'px';
+      
+      // Add sad emoji animation
+      createSadEmoji(randomX, randomY);
+    }
+
+    function confirmBack() {
+      document.getElementById('popup').style.display = 'flex'; // Show the popup
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none'; // Hide the popup
+    }
+
+    function goBack() {
+      window.history.back(); // Kembali ke halaman sebelumnya
+    }
+
+    // Function to create sad emoji at a random position
+    function createSadEmoji(x, y) {
+      const emojiContainer = document.getElementById('emoji-container');
+      const emoji = document.createElement('div');
+      emoji.className = 'sad-emoji';
+      emoji.innerText = '😢';
+      emoji.style.left = x + 'px';
+      emoji.style.top = y + 'px';
+      emojiContainer.appendChild(emoji);
+
+      // Remove the emoji after animation completes
+      setTimeout(() => {
+        emoji.remove();
+      }, 3000);
+    }
+
+    // Function to change the image automatically with fade effect
+    let currentImageIndex = 0;
+    const images = [
+      'img/bucin1.jpg',
+      'img/bucin2.jpg',
+      'img/bucin3.jpg',
+      'img/bucin4.jpg',
+      'img/bucin5.jpg',
+      'img/bucin6.jpg',
+      'img/bucin7.jpg'
+    ];
+
+    function changeImage() {
+      const gambar = document.getElementById('gambar');
+      gambar.classList.add('fade-out');
+      setTimeout(() => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        gambar.src = images[currentImageIndex];
+        gambar.classList.remove('fade-out');
+      }, 500); // Match this with the fade-out duration in CSS
+    }
+
+    setInterval(changeImage, 3000); // Change image every 3 seconds
+  </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadi Pacar Aku?</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Menambahkan referensi ke file CSS eksternal -->
+</head>
+<body>
+  <div class="content">
+    <h1 class="animated-text">Kamu Mau Jadi Pacar Aku?</h1>
+    <div id="captcha-container" class="captcha-container">
+      <p>Klik 5 gambar love untuk melanjutkan:</p>
+      <div class="images">
+        <!-- Gambar Love untuk Captcha -->
+        <img src="img/love.png" alt="Love" onclick="clickLove(this)">
+        <img src="img/love.png" alt="Love" onclick="clickLove(this)">
+        <img src="img/love.png" alt="Love" onclick="clickLove(this)">
+        <img src="img/love.png" alt="Love" onclick="clickLove(this)">
+        <img src="img/love.png" alt="Love" onclick="clickLove(this)">
+      </div>
+    </div>
+    <div class="tombol-container">
+      <button class="tombol" id="submit-button" onclick="terima()" style="display: none;">Lanjut</button>
+     
+    </div>
+
+    <div id="emoji-container"></div> <!-- Kontainer untuk emoji sedih -->
+  </div>
+
+  <script>
+    let loveClicks = 0;
+
+    function clickLove(img) {
+      if (!img.classList.contains('clicked')) {
+        img.classList.add('clicked');
+        loveClicks++;
+        if (loveClicks >= 5) {
+          document.getElementById('submit-button').style.display = 'inline-block';
+        }
+      }
+    }
+
+    function terima() {
+      if (loveClicks >= 5) {
+        window.location.href = 'index1.html'; // Arahkan ke halaman "index2.html" jika captcha terpenuhi
+      }
+    }
+
+    function tolak() {
+      const button = document.getElementById('tolak');
+      const container = document.querySelector('.content');
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      
+      // Generate random positions within a smaller range inside the container
+      const rangeX = containerRect.width / 3;
+      const rangeY = containerRect.height / 3;
+      const randomX = Math.random() * rangeX - rangeX / 2 + (buttonRect.left - containerRect.left);
+      const randomY = Math.random() * rangeY - rangeY / 2 + (buttonRect.top - containerRect.top);
+      
+      // Position the button within the container
+      button.style.position = 'absolute';
+      button.style.left = Math.max(0, Math.min(containerRect.width - buttonRect.width, randomX)) + 'px';
+      button.style.top = Math.max(0, Math.min(containerRect.height - buttonRect.height, randomY)) + 'px';
+      
+      // Add sad emoji animation
+      createSadEmoji(randomX, randomY);
+    }
+
+    // Function to create sad emoji at a random position
+    function createSadEmoji(x, y) {
+      const emojiContainer = document.getElementById('emoji-container');
+      const emoji = document.createElement('div');
+      emoji.className = 'sad-emoji';
+      emoji.innerText = '😢';
+      emoji.style.left = x + 'px';
+      emoji.style.top = y + 'px';
+      emojiContainer.appendChild(emoji);
+
+      // Remove the emoji after animation completes
+      setTimeout(() => {
+        emoji.remove();
+      }, 3000);
+    }
+
+    // Function to change the image automatically with fade effect
+    let currentImageIndex = 0;
+    const images = [
+      'img/bucin1.jpg',
+      'img/bucin2.jpg',
+      'img/bucin3.jpg',
+      'img/bucin4.jpg',
+      'img/bucin5.jpg',
+      'img/bucin6.jpg',
+      'img/bucin7.jpg'
+    ];
+
+    function changeImage() {
+      const gambar = document.getElementById('gambar');
+      gambar.classList.add('fade-out');
+      setTimeout(() => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        gambar.src = images[currentImageIndex];
+        gambar.classList.remove('fade-out');
+      }, 500); // Match this with the fade-out duration in CSS
+    }
+
+    setInterval(changeImage, 3000); // Change image every 3 seconds
+  </script>
+</body>
+</html>
